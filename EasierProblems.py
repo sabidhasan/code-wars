@@ -1,3 +1,21 @@
+#https://www.codewars.com/kata/strip-url-params
+#Description: Removes any duplicate query string parameters from the url
+#Removes any query string parameters specified within the 2nd argument (optional array)
+
+def strip_url_params(url, params_to_strip = []):
+    print url
+    print params_to_strip
+    if not("?" in url) : return url
+    
+    all_params = []
+    done = []
+    for item in url.split(".com?")[1].split("&"):
+        curr_p = item.split("=")[0]
+        if not (curr_p in params_to_strip) and not(curr_p in all_params):
+            all_params.append(item.split("=")[0])
+            done.append(item)
+    return url.split(".com?")[0] + ".com?" + '&'.join(done)
+    
 #https://www.codewars.com/kata/vector-class/python
 #Description:
 #Create a Vector object that supports addition, subtraction, dot products, and norms. So, for example:
