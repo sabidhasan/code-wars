@@ -1,3 +1,29 @@
+#https://www.codewars.com/kata/range-extraction
+#Description: A format for expressing an ordered list of integers is to use a comma separated list of either
+#   individual integers
+#or a range of integers denoted by the starting integer separated from the end integer in the range by a dash, '-'. The range           includes all integers in the interval including both endpoints. It is not considered a range unless it spans at least 3 numbers.     For example ("12, 13, 15-17")
+
+def solution(l):
+    s = ""
+    r = []
+
+    for c, i in enumerate(l):
+        r.append(i)
+        
+        if c == len(l) - 1 or i != l[c+1] - 1:
+            #edge case, just print withut comapring the next one
+            if len(r) >= 3:
+                s += str(r[0]) + '-' + str(r[-1]) + ','
+            else: 
+                s = s + ','.join(map(str, r)) + ","
+            #reset the list for the next one
+            r = []
+    return s[:-1]
+
+#################################################
+#################################################
+#################################################
+
 #https://www.codewars.com/kata/molecule-to-atoms/python
 #Description:
 #For a given chemical formula represented by a string, count the number of atoms of each element contained in the molecule and return an object.
