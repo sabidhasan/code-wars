@@ -1,3 +1,23 @@
+#https://www.codewars.com/kata/the-observed-pin/train/python
+#Description: This challenge involves guessing a PIN code based on the input's digits, based on
+#the digits' position on a numerical keypad
+
+import itertools
+
+def get_pins(observed):
+    #Define the keypad
+    d = {1: [1,2,4], 2:[1,2,3,5], 3:[2,3,6], 4:[1,4,5,7], 5:[2,4,5,6,8],
+    6:[3,5,6,9], 7:[4,7,8], 8:[7,8,9,5,0], 9:[6,8,9], 0:[0,8]}
+    
+    #make list of possibilities
+    res = [d[int(chr)] for chr in observed]
+    #make product using itertools, then map that resulting list of tuples into list of strings
+    return map(lambda x: ''.join(map(str, list(x))) , list(itertools.product(*res)))
+    
+#################################################
+#################################################
+#################################################
+    
 #https://www.codewars.com/kata/range-extraction
 #Description: A format for expressing an ordered list of integers is to use a comma separated list of either
 #   individual integers
