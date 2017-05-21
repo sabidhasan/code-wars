@@ -1,3 +1,110 @@
+#https://www.codewars.com/kata/simple-fun-number-159-middle-permutation
+#Description: You are given a string s. Every letter in s appears once.
+#Consider all strings formed by rearranging the letters in s. After ordering these strings in dictionary order, return the middle term. (If the sequence has a even length n, define its middle term to be the (n/2)th term.)
+
+from math import factorial
+def middle_permutation(string):
+    #These are the sorted letters!
+    a=  sorted(list(string))
+    
+    #Desired final index (aka middle of the total possibilies (minus 1 for index correction)
+    des_final_ind = factorial(len(string)) / 2 - 1
+    #offset is to track realtive posiitoning (basically des_final_ind will be correct for the first
+    #letter, but subseqwuent letters need to be picked relative to what's been picked before
+    offset = 0
+
+    #return string
+    r = ""
+    
+    #loop through string length
+    for i in range(len(string)):
+        #looking at ith letter
+          
+        #total possibilties for current letter (factorial of remaining string length)
+        tot = factorial(len(string) - i)
+
+        #this is the temporary offset from real desired index (on first pass it's
+        #0, but subsequent passes it depends on what we have already picked
+        desindex = des_final_ind - offset
+        
+        #this is how many of the words start with the each letter (total # words divided by total num remaining letters)
+        eachletter = tot/(len(string) - i)
+        
+        #letter to pick
+        lettertopick = desindex // eachletter
+        
+        #update offset based on what we picked
+        offset += lettertopick * eachletter
+
+        #Actually pick the letter! And delete the letter from list
+        r += a[lettertopick]
+        del a[lettertopick]
+    return r
+
+#################################################
+#################################################
+#################################################    
+    
+#https://www.codewars.com/kata/simple-fun-number-159-middle-permutation
+#Description: You are given a string s. Every letter in s appears once.
+    #Consider all strings formed by rearranging the letters in s. After ordering these strings in dictionary order, return the middle term. (If the sequence has a even length n, define its middle term to be the (n/2)th term.)
+
+from itertools import permutations
+from math import factorial
+
+def middle_permutation(string):
+    return sorted([''.join(list(item)) for item in list(permutations(list(string)))])[factorial(len(string))/2-1]
+ 
+#################################################
+#################################################
+#################################################   
+  
+#https://www.codewars.com/kata/the-observed-pin/train/python
+#Description: This challenge involves guessing a PIN code based on the input's digits, based on
+#the digits' position on a numerical keypad
+
+import itertools
+
+def get_pins(observed):
+    #Define the keypad
+    d = {1: [1,2,4], 2:[1,2,3,5], 3:[2,3,6], 4:[1,4,5,7], 5:[2,4,5,6,8],
+    6:[3,5,6,9], 7:[4,7,8], 8:[7,8,9,5,0], 9:[6,8,9], 0:[0,8]}
+    
+    #make list of possibilities
+    res = [d[int(chr)] for chr in observed]
+    #make product using itertools, then map that resulting list of tuples into list of strings
+    return map(lambda x: ''.join(map(str, list(x))) , list(itertools.product(*res)))
+    
+#################################################
+#################################################
+#################################################
+    
+#https://www.codewars.com/kata/range-extraction
+#Description: A format for expressing an ordered list of integers is to use a comma separated list of either
+#   individual integers
+#or a range of integers denoted by the starting integer separated from the end integer in the range by a dash, '-'. The range           includes all integers in the interval including both endpoints. It is not considered a range unless it spans at least 3 numbers.     For example ("12, 13, 15-17")
+
+def solution(l):
+    s = ""
+    r = []
+
+    for c, i in enumerate(l):
+        r.append(i)
+        
+        if c == len(l) - 1 or i != l[c+1] - 1:
+            #edge case, just print withut comapring the next one
+            if len(r) >= 3:
+                s += str(r[0]) + '-' + str(r[-1]) + ','
+            else: 
+                s = s + ','.join(map(str, r)) + ","
+            #reset the list for the next one
+            r = []
+    return s[:-1]
+
+#################################################
+#################################################
+#################################################
+
 #https://www.codewars.com/kata/molecule-to-atoms/python
 #Description:
 #For a given chemical formula represented by a string, count the number of atoms of each element contained in the molecule and return an object.
