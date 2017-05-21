@@ -1,3 +1,64 @@
+#https://www.codewars.com/kata/simple-fun-number-159-middle-permutation
+#Description: You are given a string s. Every letter in s appears once.
+#Consider all strings formed by rearranging the letters in s. After ordering these strings in dictionary order, return the middle term. (If the sequence has a even length n, define its middle term to be the (n/2)th term.)
+
+from math import factorial
+def middle_permutation(string):
+    #These are the sorted letters!
+    a=  sorted(list(string))
+    
+    #Desired final index (aka middle of the total possibilies (minus 1 for index correction)
+    des_final_ind = factorial(len(string)) / 2 - 1
+    #offset is to track realtive posiitoning (basically des_final_ind will be correct for the first
+    #letter, but subseqwuent letters need to be picked relative to what's been picked before
+    offset = 0
+
+    #return string
+    r = ""
+    
+    #loop through string length
+    for i in range(len(string)):
+        #looking at ith letter
+          
+        #total possibilties for current letter (factorial of remaining string length)
+        tot = factorial(len(string) - i)
+
+        #this is the temporary offset from real desired index (on first pass it's
+        #0, but subsequent passes it depends on what we have already picked
+        desindex = des_final_ind - offset
+        
+        #this is how many of the words start with the each letter (total # words divided by total num remaining letters)
+        eachletter = tot/(len(string) - i)
+        
+        #letter to pick
+        lettertopick = desindex // eachletter
+        
+        #update offset based on what we picked
+        offset += lettertopick * eachletter
+
+        #Actually pick the letter! And delete the letter from list
+        r += a[lettertopick]
+        del a[lettertopick]
+    return r
+
+#################################################
+#################################################
+#################################################    
+    
+#https://www.codewars.com/kata/simple-fun-number-159-middle-permutation
+#Description: You are given a string s. Every letter in s appears once.
+    #Consider all strings formed by rearranging the letters in s. After ordering these strings in dictionary order, return the middle term. (If the sequence has a even length n, define its middle term to be the (n/2)th term.)
+
+from itertools import permutations
+from math import factorial
+
+def middle_permutation(string):
+    return sorted([''.join(list(item)) for item in list(permutations(list(string)))])[factorial(len(string))/2-1]
+ 
+#################################################
+#################################################
+#################################################   
+  
 #https://www.codewars.com/kata/the-observed-pin/train/python
 #Description: This challenge involves guessing a PIN code based on the input's digits, based on
 #the digits' position on a numerical keypad
