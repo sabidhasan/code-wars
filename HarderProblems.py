@@ -1,3 +1,20 @@
+#https://www.codewars.com/kata/5269452810342858ec000951
+#Description: You need to create a function that will validate if given parameters are valid geographical coordinates.
+
+def is_valid_coordinates(coordinates):
+    if coordinates.count(',') != 1 or 'e' in coordinates: return False
+    try:
+        c = [float(i.lstrip()) for i in coordinates.split(',')]
+    except:
+        return False
+    if not(0 <= abs(c[0]) <= 90) or not(0 <= abs(c[0]) <= 180):
+        return False
+    return True
+    
+#################################################
+#################################################
+#################################################    
+
 #https://www.codewars.com/kata/strip-comments
 #Description: Complete the solution so that it strips all text that follows any of a set of comment markers passed in. Any whitespace at the end of the line should also be stripped out.
 
