@@ -1,3 +1,18 @@
+#https://www.codewars.com/kata/strip-comments
+#Description: Complete the solution so that it strips all text that follows any of a set of comment markers passed in. Any whitespace at the end of the line should also be stripped out.
+
+def solution(string,markers):
+    r = ""
+    for line in string.split("\n"):
+        for item in markers:
+            line = line.split(item)[0].strip()
+        r += line + "\n"
+    return r[:-1]
+
+#################################################
+#################################################
+#################################################    
+
 #https://www.codewars.com/kata/permutations
 #Description: In this kata you have to create all permutations of an input string and remove duplicates, if present.
 #This means, you have to shuffle all letters from the input in all possible orders.
