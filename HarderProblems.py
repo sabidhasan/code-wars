@@ -1,3 +1,15 @@
+#https://www.codewars.com/kata/permutations
+#Description: In this kata you have to create all permutations of an input string and remove duplicates, if present.
+#This means, you have to shuffle all letters from the input in all possible orders.
+
+import itertools
+def permutations(string):
+    return [''.join(list(item)) for item in set(itertools.permutations(string))]
+    
+#################################################
+#################################################
+#################################################    
+
 #https://www.codewars.com/kata/simple-fun-number-159-middle-permutation
 #Description: You are given a string s. Every letter in s appears once.
 #Consider all strings formed by rearranging the letters in s. After ordering these strings in dictionary order, return the middle term. (If the sequence has a even length n, define its middle term to be the (n/2)th term.)
