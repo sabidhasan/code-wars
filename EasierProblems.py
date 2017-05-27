@@ -1,3 +1,29 @@
+#https://www.codewars.com/kata/550f22f4d758534c1100025a
+#Directions Reduction: Once upon a time, on a way through the old wild west,… a man was given directions to go from one point to another.
+#The directions were "NORTH", "SOUTH", "WEST", "EAST". Clearly "NORTH" and "SOUTH" are opposite, "WEST" and "EAST" too.
+#Going to one direction and coming back the opposite direction is a needless effort.
+
+def opposite(item):
+    a = [["EAST", "WEST"], ["NORTH", "SOUTH"]]
+    for l in a:
+        if item in l:
+            del l[l.index(item)]
+            return l[0]
+            
+def dirReduc(arr):
+    pos = []
+    for item in arr:
+        print item
+        try:
+            if pos[-1] == opposite(item):
+                pos.pop()
+                continue
+        except:
+            pass
+        pos.append(item)
+    return pos
+
+
 #https://www.codewars.com/kata/strip-url-params
 #Description: Removes any duplicate query string parameters from the url
 #Removes any query string parameters specified within the 2nd argument (optional array)
