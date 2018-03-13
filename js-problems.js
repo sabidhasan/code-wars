@@ -54,15 +54,25 @@ function flatten(arr) {
 
 var y = flatten([10, [1, 2], [1, 2], [1, 2], [1, 2], [1, 2]])
 
-function all(arr, func) {
-  //returns true if all things in array are true, when tested with func
-  if (!arr.length) return false;
-  for (var i in arr) {
-    if (func(arr[i]) == false) return false;
+
+
+//makes ANY and ALL (some and every) functions - they return true if any or all
+//values (respectively) are true in the provided iterable
+function anyAllMaker(loopBool) {
+  return function(arr, func) {
+    //check for empty array or non-array things
+    if (!arr.length || typeof arr != "object") return false;
+
+    //loop through
+    for (var i in arr) {
+      if (func(arr[i]) == loopBool) return loopBool;
+    }
+    //fallback case - all must be true/false
+    return !loopBool;
   }
-  return true;
 }
 
-function any(arr, func) {
-
-}
+//returns true if all things in array are true, when tested with func
+const all = anyAllMaker(false);
+//returns true if any thing in array is true
+const any = anyAllMaker(true);
