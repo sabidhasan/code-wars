@@ -1,3 +1,4 @@
+// CHAPTER 4 PROBLEMS
 function arrayToList(arr, tailPointer = null) {
 /* Data structure to convert array to list
    [1, 2, 3] ====>   {val: 1, rest: {
@@ -41,3 +42,8 @@ function nth(list, index, depth = 0) {
 }
 
 var x = arrayToList([1, 2, 3, 4]);
+
+
+
+
+// CHAPTER 5 PROBLEMS
