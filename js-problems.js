@@ -47,3 +47,22 @@ var x = arrayToList([1, 2, 3, 4]);
 
 
 // CHAPTER 5 PROBLEMS
+function flatten(arr) {
+  //flattens an array of arrays (only 1 level deep) into one deep array
+  return arr.reduce((acc, val) => acc.concat(val), [])
+}
+
+var y = flatten([10, [1, 2], [1, 2], [1, 2], [1, 2], [1, 2]])
+
+function all(arr, func) {
+  //returns true if all things in array are true, when tested with func
+  if (!arr.length) return false;
+  for (var i in arr) {
+    if (func(arr[i]) == false) return false;
+  }
+  return true;
+}
+
+function any(arr, func) {
+
+}
