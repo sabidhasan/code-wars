@@ -1,4 +1,6 @@
-// CHAPTER 4 PROBLEMS
+/*
+  // CHAPTER 4 PROBLEMS
+*/
 function arrayToList(arr, tailPointer = null) {
 /* Data structure to convert array to list
    [1, 2, 3] ====>   {val: 1, rest: {
@@ -45,8 +47,9 @@ var x = arrayToList([1, 2, 3, 4]);
 
 
 
-
-// CHAPTER 5 PROBLEMS
+/*
+  // CHAPTER 5 PROBLEMS
+*/
 function flatten(arr) {
   //flattens an array of arrays (only 1 level deep) into one deep array
   return arr.reduce((acc, val) => acc.concat(val), [])
@@ -76,3 +79,25 @@ function anyAllMaker(loopBool) {
 const all = anyAllMaker(false);
 //returns true if any thing in array is true
 const any = anyAllMaker(true);
+
+
+
+/*
+  //CHAPTER 6 PROBLEM
+*/
+function Vector(x, y) {
+  this.x = x;
+  this.y = y;
+  Object.defineProperty(this, "length", {
+    get: function(){return Math.sqrt((x*x) + (y*y));}
+  });
+  // get length() {
+  //
+  // }
+}
+Vector.prototype.plus = function(otherVector) {
+  return new Vector(this.x + otherVector.x, this.y + otherVector.y);
+}
+Vector.prototype.minus = function(otherVector) {
+  return new Vector(this.x - otherVector.x, this.y - otherVector.y);
+}
