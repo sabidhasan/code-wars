@@ -4,8 +4,71 @@
     <meta charset="utf-8">
     <title>Game of "Life"</title>
     <script type="text/javascript">
-      alert('s')
-    </script>
+
+      //deifine the Vector, the basic unit of direction
+      function Vector(x, y) {
+        if (x < 0 || y < 0) throw new RangeError;
+        this.x = x;
+        this.y = y
+      }
+      Vector.prototype.plus = function(otherVector) {
+        return new Vector(otherVector.x + this.x, otherVector.y + this.y);
+      }
+
+      //define the Grid object
+      function Grid(width, height) {
+        //space is the array that represents the grid
+        this.space = new Array(width * height);
+        this.width = width;
+        this.height = height;
+      }
+      Grid.prototype.isInside = function(vector) {
+        return vector.x >=0 && vector.x < this.width &&
+               vector.y >=0 && vector.y < this.height;
+      }
+      Grid.prototype.get = function(vector) {
+        return this.space[vector.x + this.width * vector.y];
+      }
+      Grid.prototype.set = function(vector, value) {
+        this.space[vector.x + this.width * vector.y] = value;
+      }
+
+      //cardinal directions
+      var directions = {
+        "n": new Vector(0, -1),
+        "ne": new Vector(1, -1),
+        "e": new Vector(1, 0),
+        "se": new Vector(1, 1),
+        "s": new Vector(0, 1),
+        "sw": new Vector(-1, 1),
+        "w": new Vector(-1, 0),
+        "nw": new Vector(-1, -1)
+      }
+
+      //CRITTER OBJECT and its related functions
+      function randomElement(arr) {
+        //to pick a random direction
+        return arr[Math.floor(Math.random() * arr.length)];
+      }
+      //could use obj.keys of directions object but this preserves order
+      var directionNames = "n ne e se s sw w nw".split(" ");
+
+      function BouncingCritter() {
+        //constructor for a "stupid" critter
+        this.direction = randomElement(directionNames);
+      }
+      BouncingCritter.prototype.act = function(view) {
+        if (view.look(this.direction) != " ") {
+          this.direction = view.find(" ") || "s";
+        }
+        //return a action object
+        return {type: "move", direction: this.direction}
+      }
+
+
+      //WORLD OBJECT
+
+      </script>
 
   </head>
   <body>
