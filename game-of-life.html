@@ -4,9 +4,11 @@
     <meta charset="utf-8">
     <title>Game of "Life"</title>
     <script type="text/javascript">
-
-      //deifine the Vector, the basic unit of direction
+      ////////////////////
+      // BASIC    STUFF //
+      ////////////////////
       function Vector(x, y) {
+        //Vector is the basic unit of direction
         if (x < 0 || y < 0) throw new RangeError;
         this.x = x;
         this.y = y
@@ -15,7 +17,6 @@
         return new Vector(otherVector.x + this.x, otherVector.y + this.y);
       }
 
-      //define the Grid object
       function Grid(width, height) {
         //space is the array that represents the grid
         this.space = new Array(width * height);
@@ -33,8 +34,11 @@
         this.space[vector.x + this.width * vector.y] = value;
       }
 
-      //cardinal directions
+      //////////////////////////////////////////////////////
+      ///CRITTER OBJECT and its related functions/objects///
+      //////////////////////////////////////////////////////
       var directions = {
+        //cardinal directions array - used for movement
         "n": new Vector(0, -1),
         "ne": new Vector(1, -1),
         "e": new Vector(1, 0),
@@ -45,11 +49,11 @@
         "nw": new Vector(-1, -1)
       }
 
-      //CRITTER OBJECT and its related functions
       function randomElement(arr) {
         //to pick a random direction
         return arr[Math.floor(Math.random() * arr.length)];
       }
+
       //could use obj.keys of directions object but this preserves order
       var directionNames = "n ne e se s sw w nw".split(" ");
 
@@ -57,17 +61,17 @@
         //constructor for a "stupid" critter
         this.direction = randomElement(directionNames);
       }
+
       BouncingCritter.prototype.act = function(view) {
         if (view.look(this.direction) != " ") {
           this.direction = view.find(" ") || "s";
         }
-        //return a action object
+        //return an action object
         return {type: "move", direction: this.direction}
       }
 
-
       //WORLD OBJECT
-
+      
       </script>
 
   </head>
