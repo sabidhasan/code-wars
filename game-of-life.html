@@ -200,10 +200,33 @@
       ////////////
       function Wall() {};
 
+      //////////////////
+      // WALL CRAWLER //
+      //////////////////
+      function dirPlus(dir, n) {
+        //north + 3 = "se", n + 4 = "s", etc.
+        var index = directionNames.indexOf(dir);
+        return directionNames[(index + n + 8) % 8];
+      }
 
-
-
-
+      function WallFollower() {
+        //arbitrarily goes south
+        this.dir = "s";
+      }
+      WallFollower.prototype.act = function(view) {
+        //initial starting position
+        var start = this.dir;
+        if (view.look(dirPlus(this.dir, -3)) != " ") {
+          start = this.dir = dirPlus(this.dir, -2);
+        }
+        while (view.look(this.dir) != " ") {
+          //find first open space
+          this.dir = dirPlus(this.dir, 1);
+          //exit loop if we have gone all around
+          if (this.dir == start) break;
+        }
+        return {type: "move", direction: this.dir}
+      }
 
 
 
@@ -219,14 +242,15 @@
          "##     #                      #                  ###",
          "#     ##              #   o   #               ######",
          "#                     #       #            o  #    #",
-         "#                     #  ######                    #",
+         "#                     # ~######                    #",
          "###                                                #",
          "#       o                                  o       #",
          "#         ##  ##  ##  ##               ###         #",
          "#              #              #       #####  o     #",
          "##             #  #    ###  ###        ###         #",
          "###               #   #####                        #",
-         "####################################################"], {"#": Wall, "o": BouncingCritter})
+         "####################################################"],
+         {"#": Wall, "o": BouncingCritter, "~": WallFollower})
       </script>
 
   </head>
@@ -238,7 +262,7 @@
     var d = document.getElementById("content");
     var counter = 0;
     setInterval(function() {
-      if (counter > 4) return;
+      if (counter > 40) return;
       world.turn();
       d.innerHTML = world.toString();
       counter++;
