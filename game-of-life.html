@@ -9,7 +9,7 @@
 
     <script type="text/javascript">
       ////////////////////
-      // BASIC    STUFF //
+      //  BASIC STUFF   //
       ////////////////////
       function Vector(x, y) {
         //Vector is the basic unit of direction
@@ -86,7 +86,9 @@
         return {type: "move", direction: this.direction}
       }
 
-      //WORLD OBJECT
+      ///////////////////////
+      //    WORLD OBJECT   //
+      ///////////////////////
       function elementFromChar(legend, ch) {
         // legend is an object that contians constructor functions for each thing (food, wall etc.)
         if (ch == " ") return null;
@@ -228,7 +230,46 @@
         return {type: "move", direction: this.dir}
       }
 
+      ////////////////////
+      // LIFELIKE WORLD //
+      ////////////////////
+      //this world has food and reproduction
+      function LifeLikeWorld(map, legend) {
+        World.call(this, map, legend);
+      }
+      LifeLikeWorld.prototype = Object.create(World.prototype)
 
+      var actionTypes = Object.create(null);
+      actionTypes.grow = function(critter) {
+        //growing is used by plants to increase energy by 0.5 points no matter what
+        critter.energy += 0.5;
+        return true;
+      }
+      actionTypes.move = function(critter, vector, action) {
+        //move uses energy, if the move is valid
+        var dest = this.checkDestination(action, vector);
+        if (dest == null || critter.energy <=1 || this.grid.get(dest) != null) {
+          return false;
+        }
+        //reduce energy
+        critter.energy -= 1;
+        this.grid.set(vector, null);
+        this.grid.set(dest, critter);        
+      }
+
+      LifeLikeWorld.prototype.letAct = function(critter, vector) {
+        var action = critter.act(new View(this, vector));
+        //action exists? type is valid? action function when called doesnt return false?
+        var handled = action && action.type in actionTypes && actionTypes[action.type].call(this, critter, vector, action);
+        if (!handled) {
+          //energy goes down
+          critter.energy -= 0.2;
+          if (critter.energy < 0) {
+            //critter is dead
+            this.grid.set(vector, null);
+          }
+        }
+      }
 
 
       var world = new World(
