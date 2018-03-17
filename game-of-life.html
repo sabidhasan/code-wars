@@ -3,6 +3,10 @@
   <head>
     <meta charset="utf-8">
     <title>Game of "Life"</title>
+    <style type="text/css">
+      * {font-family: monospace;}
+    </style>
+
     <script type="text/javascript">
       ////////////////////
       // BASIC    STUFF //
@@ -112,9 +116,11 @@
         for (var y = 0; y < this.grid.height; y++) {
           for (var x = 0; x < this.grid.width; x++) {
             var elem = this.grid.get(new Vector(x, y));
-            output += charFromElement(elem)
+            var char = charFromElement(elem);
+            if (char == " ") char = "&nbsp;"
+            output += char;
           }
-          output += "\n";
+          output += "<br>";
         }
         return output;
       }
@@ -123,7 +129,7 @@
         //dont move twice
         var acted = [];
         this.grid.forEach(function(critter, vector) {
-          if (critter.act && acted.indexOf(critter) != -1) {
+          if (critter.act && acted.indexOf(critter) == -1) {
             acted.push(critter);
             //this refers to current world object
             this.letAct(critter, vector);
@@ -134,9 +140,11 @@
         //logic for critters to move
         var action = critter.act(new View(this, vector));
         //move action
-        if (action && action.type = "move") {
+        console.log(action);
+        if (action && action.type == "move") {
           //check destination is valid (not wall or a critter)
           var dest = this.checkDestination(action, vector);
+          console.log(dest);
           // check destination is empty (" ")
           if (dest && this.grid.get(dest) == null) {
             //space is empty so move the critter
@@ -147,7 +155,7 @@
       };
       World.prototype.checkDestination = function(action, vector) {
         //check if a wall/critter is occupying this
-        if (directions.hasOwnProperty(action.destination)) {
+        if (directions.hasOwnProperty(action.direction)) {
           var dest = vector.plus(directions[action.direction]);
           if (this.grid.isInside(dest)) return dest;
         }
@@ -163,7 +171,8 @@
       View.prototype.look = function(dir) {
         //returns what lies in the direction
         var target = this.vector.plus(directions[dir]);
-        if (this.world.isInside(target)) {
+        // console.log();
+        if (this.world.grid.isInside(target)) {
           //valid move - return what lies there
           return charFromElement(this.world.grid.get(target))
         }
@@ -181,7 +190,9 @@
         return found;
       }
       View.prototype.find = function(ch) {
-        
+        var found = this.findAll(ch);
+        if (found.length == 0) return null;
+        return randomElement(found);
       }
 
       ////////////
@@ -190,9 +201,47 @@
       function Wall() {};
 
 
+
+
+
+
+
+
+
+      var world = new World(
+      [  "####################################################",
+         "#                 ####                           ###",
+         "#         ##                 ########       oo    ##",
+         "#        ##        o o                             #",
+         "#       ###                        ##########      #",
+         "#      #####            ####                       #",
+         "##     #              #########                    #",
+         "##     #                      #                  ###",
+         "#     ##              #   o   #               ######",
+         "#                     #       #            o  #    #",
+         "#                     #  ######                    #",
+         "###                                                #",
+         "#       o                                  o       #",
+         "#         ##  ##  ##  ##               ###         #",
+         "#              #              #       #####  o     #",
+         "##             #  #    ###  ###        ###         #",
+         "###               #   #####                        #",
+         "####################################################"], {"#": Wall, "o": BouncingCritter})
       </script>
 
   </head>
   <body>
+    <div id="content"></div>
   </body>
+
+  <script type="text/javascript">
+    var d = document.getElementById("content");
+    var counter = 0;
+    setInterval(function() {
+      if (counter > 4) return;
+      world.turn();
+      d.innerHTML = world.toString();
+      counter++;
+    }, 500)
+  </script>
 </html>
