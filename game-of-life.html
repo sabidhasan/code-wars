@@ -79,7 +79,10 @@
         return element;
       }
 
-      function charFromElement()
+      function charFromElement(element) {
+        if (element == null) return " ";
+        return element.originChar;
+      }
 
       function World(map, legend) {
         var grid = new Grid(map[0].length, map.length);
@@ -92,6 +95,23 @@
           }
         });
       }
+      World.prototype.toString = function() {
+        var output = "";
+        for (var y = 0; y < ths.grid.height) {
+          for (var x = 0; x < this.grid.width) {
+            var elem = this.grid.get(new Vector(x, y));
+            output += charFromElement(elem)
+          }
+          output += "\n";
+        }
+        return output;
+      }
+
+      ////////////
+      //  WALL  //
+      ////////////
+      function Wall() {};
+
       </script>
 
   </head>
