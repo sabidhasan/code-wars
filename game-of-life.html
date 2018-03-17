@@ -9,7 +9,7 @@
       ////////////////////
       function Vector(x, y) {
         //Vector is the basic unit of direction
-        if (x < 0 || y < 0) throw new RangeError;
+        // if (x < 0 || y < 0) throw new RangeError;
         this.x = x;
         this.y = y
       }
@@ -32,6 +32,19 @@
       }
       Grid.prototype.set = function(vector, value) {
         this.space[vector.x + this.width * vector.y] = value;
+      }
+      Grid.prototype.forEach = function(f, context) {
+        //loop through the grid
+        for (var y = 0; y < this.height; y++) {
+          for (var x = 0; x < this.width; x++) {
+            //get value at this position
+            var value = this.space[x + y * this.width];
+            if (value != null) {
+              //call the function with given "this" vlaue
+              f.call(context, value, new Vector(x, y));
+            }
+          }
+        }
       }
 
       //////////////////////////////////////////////////////
@@ -61,7 +74,6 @@
         //constructor for a "stupid" critter
         this.direction = randomElement(directionNames);
       }
-
       BouncingCritter.prototype.act = function(view) {
         if (view.look(this.direction) != " ") {
           this.direction = view.find(" ") || "s";
@@ -97,8 +109,8 @@
       }
       World.prototype.toString = function() {
         var output = "";
-        for (var y = 0; y < ths.grid.height) {
-          for (var x = 0; x < this.grid.width) {
+        for (var y = 0; y < this.grid.height; y++) {
+          for (var x = 0; x < this.grid.width; x++) {
             var elem = this.grid.get(new Vector(x, y));
             output += charFromElement(elem)
           }
@@ -106,11 +118,41 @@
         }
         return output;
       }
+      World.prototype.turn = function() {
+        //acted keeps track of things that have already moved this turn, so they
+        //dont move twice
+        var acted = [];
+        this.grid.forEach(function(critter, vector) {
+          if (critter.act && acted.indexOf(critter) != -1) {
+            acted.push(critter);
+            //this refers to current world object
+            this.letAct(critter, vector);
+          }
+        }, this);
+      }
+      World.prototype.letAct = function(critter, vector) {
+        //logic for critters to move
+        var action = critter.act(new View(this, vector));
+        //move action
+        if (action && action.type = "move") {
+          //check destination is valid (not wall or a critter)
+          var dest = this.checkDestination(action, vector);
+          // check destination is empty (" ")
+          if (dest && this.grid.get(dest) == null) {
+            //space is empty so move the critter
+            this.grid.set(vector, null);
+            this.grid.set(dest, critter)
+          }
+        }
+      };
+
+      
 
       ////////////
       //  WALL  //
       ////////////
       function Wall() {};
+
 
       </script>
 
