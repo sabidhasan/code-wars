@@ -145,8 +145,44 @@
           }
         }
       };
+      World.prototype.checkDestination = function(action, vector) {
+        //check if a wall/critter is occupying this
+        if (directions.hasOwnProperty(action.destination)) {
+          var dest = vector.plus(directions[action.direction]);
+          if (this.grid.isInside(dest)) return dest;
+        }
+      }
 
-      
+      ////////////
+      //  VIEW  //
+      ////////////
+      function View(world, vector) {
+        this.world = world;
+        this.vector = vector;
+      }
+      View.prototype.look = function(dir) {
+        //returns what lies in the direction
+        var target = this.vector.plus(directions[dir]);
+        if (this.world.isInside(target)) {
+          //valid move - return what lies there
+          return charFromElement(this.world.grid.get(target))
+        }
+        //block the move
+        return "#";
+      };
+      View.prototype.findAll = function(ch) {
+        //look through all possible directions and see if they exist
+        var found = [];
+        for (var dir in directions) {
+          if (this.look(dir) == ch) {
+            found.push(dir);
+          }
+        }
+        return found;
+      }
+      View.prototype.find = function(ch) {
+        
+      }
 
       ////////////
       //  WALL  //
