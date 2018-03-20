@@ -238,25 +238,6 @@
         World.call(this, map, legend);
       }
       LifeLikeWorld.prototype = Object.create(World.prototype)
-
-      var actionTypes = Object.create(null);
-      actionTypes.grow = function(critter) {
-        //growing is used by plants to increase energy by 0.5 points no matter what
-        critter.energy += 0.5;
-        return true;
-      }
-      actionTypes.move = function(critter, vector, action) {
-        //move uses energy, if the move is valid
-        var dest = this.checkDestination(action, vector);
-        if (dest == null || critter.energy <=1 || this.grid.get(dest) != null) {
-          return false;
-        }
-        //reduce energy
-        critter.energy -= 1;
-        this.grid.set(vector, null);
-        this.grid.set(dest, critter);        
-      }
-
       LifeLikeWorld.prototype.letAct = function(critter, vector) {
         var action = critter.act(new View(this, vector));
         //action exists? type is valid? action function when called doesnt return false?
@@ -270,6 +251,50 @@
           }
         }
       }
+
+      /////////////////////////////////
+      // LIFELIKE WORLD ACTION TYPES //
+      /////////////////////////////////
+      var actionTypes = Object.create(null);
+      actionTypes.grow = function(critter) {
+        //growing is used by plants to increase energy by 0.5 points no matter what
+        critter.energy += 0.5;
+        return true;
+      }
+      actionTypes.move = function(critter, vector, action) {
+        //move uses energy, if the move is valid
+        var dest = this.checkDestination(action, vector);
+        // no dest provided, or energy too low, or destination is occupied, then do nothing
+        if (dest == null || critter.energy <=1 || this.grid.get(dest) != null) {
+          return false;
+        }
+        //reduce energy, update grid
+        critter.energy -= 1;
+        this.grid.set(vector, null);
+        this.grid.set(dest, critter);
+      }
+      actionTypes.eat = function(critter, vector, action) {
+        var dest = this.checkDestination(action, vector);
+        //get the item at the destination
+        var atDest = dest != null && this.grid.get(dest);
+        if (!atDest || atDest.energy == null) {
+          return false;
+        }
+        critter.energy += atDest.energy;
+        this.grid.set(dest, null);
+        return true;
+      }
+      actionTypes.reproduce = function(critter, vector, action) {
+        var newCritter = elementFromChar(this.legend, critter.originChar);
+        var dest = this.checkDestination(action, vector);
+        if (dest == null || critter.energy <= 2 * newCritter.energy || this.grid.get(dest) != null) {
+          return false;
+        }
+        critter.energy -= 2 * newCritter.energy;
+        this.grid.set(dest, newCritter);
+        return true;
+      }
+
 
 
       var world = new World(
